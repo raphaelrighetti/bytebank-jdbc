@@ -1,0 +1,33 @@
+============java.sql & javax.sql============
+
+São pacotes que vêm com o JDBC e nos permitem fazer diversas ações SQL, como conectar a um banco de dados, executar ações no banco e etc.
+
+============Connection============
+
+É uma classe que representa uma conexão a um banco de dados feita pelo JDBC.
+
+============DriverManager============
+
+É uma classe do JDBC que nos permite fazer várias ações utilizando o driver JDBC que temos no nosso projeto, que pode ser MySQL, PostgreSQL, etc.
+
+Nos permite fazer ações como abrir uma conexão e outras coisas.
+
+============prepareStatement(<sql>)============
+
+É um método que utilizamos para montar a nossa query SQL a partir de uma String de query.
+
+É importante saber que quando criamos a String para a nossa query, não precisamos passar os valores que queremos que sejam inseridos nessa query diretamente na String, apenas passamos um sinal "?" e inserimos esses valores depois com o método "prepareStatement()"
+
+Esse método retorna um "PreparedStatement", que contém diversos métodos que podemos utilizar para definir os valores que marcamos com "?", como, por exemplo, o método "setInt(<index>, <valor>)", que transforma o valor de índice passado no número inteiro que estamos passando. Existem métodos parecidos com o "setInt" para diversos tipos do Java.
+
+Podemos executar o nosso "PreparedStatement" com o método "execute()" dele. Ele retorna um booleano informando se a query foi executada corretamente e é mais utilizado para queries de inserção por esse motivo. temos outros métodos para outros tipos de queries.
+
+============Statement============
+
+É uma classe parecida com a classe "PreparedStatement", mas com a diferença de que ela não possui os métodos de set, dessa forma nos fazendo ter que inserir os dados na string por meio de concatenação.
+
+Não é recomendado utilizá-la, tendo em vista que damos brecha para um ataque de SQL Injection, já que estaremos concatenando qualquer coisa na nossa String, dando possibilidade de alguém mal intencionado inserir um SQL que irá deletar o banco de dados ou algo do tipo.
+
+============DAO (Data Access Object)============
+
+Classes DAO tem como objetivo isolar as interações com o banco de dados, de forma que a lógica de fazer qualquer ação com o banco de dados fique isolada nessa classe e as demais classes do nosso sistema tenham suas próprias responsabilidades, sem terem que se preocupar com a interação com o banco de dados em si.
