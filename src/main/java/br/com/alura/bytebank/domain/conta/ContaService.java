@@ -42,6 +42,10 @@ public class ContaService {
     public void realizarSaque(Integer numeroDaConta, BigDecimal valor) {
         Conta conta = buscarContaPorNumero(numeroDaConta);
 
+        if (!conta.isAtiva()) {
+            throw new RegraDeNegocioException("A conta está inativa!");
+        }
+
         if (valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new RegraDeNegocioException("Valor do saque deve ser superior a zero!");
         }
@@ -59,8 +63,12 @@ public class ContaService {
         }
     }
 
-    public void realizarDeposito(Integer numero, BigDecimal valor) {
-        Conta conta = buscarContaPorNumero(numero);
+    public void realizarDeposito(Integer numeroDaConta, BigDecimal valor) {
+        Conta conta = buscarContaPorNumero(numeroDaConta);
+
+        if (!conta.isAtiva()) {
+            throw new RegraDeNegocioException("A conta está inativa!");
+        }
 
         if (valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new RegraDeNegocioException("Valor do deposito deve ser superior a zero!");
@@ -69,24 +77,46 @@ public class ContaService {
         BigDecimal novoSaldo = conta.getSaldo().add(valor);
 
         try (Connection connection = connectionFactory.getConnection()) {
-            new ContaDAO(connection).atualizarSaldo(numero, novoSaldo);
+            new ContaDAO(connection).atualizarSaldo(numeroDaConta, novoSaldo);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void realizarTransferencia(Integer numeroDaContaOrigem, Integer numeroDaContaDestino, BigDecimal valor) {
+        Conta contaOrigem = buscarContaPorNumero(numeroDaContaOrigem);
+        Conta contaDestino = buscarContaPorNumero(numeroDaContaDestino);
+
         realizarSaque(numeroDaContaOrigem, valor);
         realizarDeposito(numeroDaContaDestino, valor);
     }
 
+    public void inativar(Integer numeroDaConta) {
+        Conta conta = buscarContaPorNumero(numeroDaConta);
+
+        if (conta.possuiSaldo()) {
+            throw new RegraDeNegocioException("Conta não pode ser inativada pois ainda possui saldo!");
+        }
+
+        try (Connection connection = connectionFactory.getConnection()) {
+            new ContaDAO(connection).inativar(numeroDaConta);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void encerrar(Integer numeroDaConta) {
         Conta conta = buscarContaPorNumero(numeroDaConta);
+
         if (conta.possuiSaldo()) {
             throw new RegraDeNegocioException("Conta não pode ser encerrada pois ainda possui saldo!");
         }
 
-        contas.remove(conta);
+        try (Connection connection = connectionFactory.getConnection()) {
+            new ContaDAO(connection).encerrar(numeroDaConta);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private Conta buscarContaPorNumero(Integer numero) {

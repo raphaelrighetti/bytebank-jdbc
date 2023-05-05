@@ -35,3 +35,17 @@ Também aprendi o conceito de connection pool, coisa que eu ainda não havia vis
 Nesta aula criei lógicas de depósito, saque e transferência para as contas registradas no sistema. Essas lógicas foram mais do que eu já havia visto anteriormente no curso, mas foi bom para aplicar o conhecimento em outro contexto.
 
 Além disso, aprendi sobre as transações nos bancos de dados e como implementar isso com o JDBC. Nunca tinha visto realmente o que significava esse termo e achei muito interessante o jeito como podemos aplicar uma transação utilizando apenas alguns métodos da nossa Connection. Também pude perceber que seria uma boa dar uma estudada mais a fundo no SQL.
+
+### Aula 5
+
+#### Encerramento de contas
+
+Nessa aula apliquei uma lógica de encerramento de contas, assim como uma lógica de encerramento lógico de contas, adicionando uma nova coluna na tabela "conta", a coluna "ativa". Não foi muito diferente das outras coisas que já havia visto no curso, mas tive que mexer em outras partes do código para o encerramento lógico funcionar corretamente.
+
+Também aprendi sobre o problema "N+1" e como a cláusula JOIN do SQL pode ajudar a melhorar a performance nesses casos. Realmente preciso estudar mais a fundo o SQL.
+
+### Conclusão
+
+Neste curso pude aprender muita coisa sobre o JDBC e integrar uma aplicação de exemplo com um banco de dados utilizando ele. Foi muito legal ver como algumas coisas funcionam por baixo dos panos quando estou utilizando o Spring e aprendi alguns conceitos muito interessantes, como as connection pools e transações no banco de dados.
+
+Gostei muito do curso e estou com um entendimento maior do JDBC.

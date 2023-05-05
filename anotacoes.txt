@@ -71,3 +71,8 @@ Utilizamos transferências no banco de dados para juntarmos uma série de opera�
 Podemos fazer isso desativando o "AutoCommit" da nossa Connection com o método "setAutoCommit(false)" e dando o commit da connection manualmente com o método "commit()" após a execução do nosso PreparedStatement, o que faz com que o commit seja dado se não ocorrer nenhum erro com a execução da query. Quando acontece um erro e precisamos dar um rollback, apenas executamos um rollback na connection com o método "rollback()" no bloco de catch.
 
 Transferências são muito úteis e previnem muitas inconcistências que podem acontecer quando estamos trabalhando com nossos dados em SGBDs. É um tópico bastante interessante para se estudar.
+
+============JOIN============
+
+A cláusula JOIN do SQL é utilizada para juntarmos campos de registros de tabelas diferentes, mas que possuem relação. É uma cláusula que nos auxilia muito em melhorar a performance das nossas requisições, tendo em vista o problema "N+1", que é quando um registro tem muitos outros registros e precisamos acessar todos esse muitos outros registros a partir do registro que tem relação com eles. Ele transforma os dois registros em um e junto em uma nova tabela, que podemos ou não salvar, enfim.
+
