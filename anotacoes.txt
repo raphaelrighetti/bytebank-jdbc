@@ -22,6 +22,22 @@ Esse método retorna um "PreparedStatement", que contém diversos métodos que p
 
 Podemos executar o nosso "PreparedStatement" com o método "execute()" dele. Ele retorna um booleano informando se a query foi executada corretamente e é mais utilizado para queries de inserção por esse motivo. temos outros métodos para outros tipos de queries.
 
+O PreparedStatement deve ser fechado no fim, pois ele permanece aberto por padrão. Ele é utilizado pelos bancos de dados para fins de cache e diversas outras coisas.
+
+============executeQuery()============
+
+É um método de PreparedStatement que irá executar a nossa query e retornar os registros encontrados na forma de um ResultSet.
+
+Esse ResultSet é um pouquinho diferente dos Sets convencionais, mas possui métodos que nos permitem fazer iteração e diversos outros métodos que podemos utilizar.
+
+next():
+
+    É um método que retorna um booleano representando se existem mais itens no ResultSet ou não e passa para o próximo item no nosso ResultSet (na primeira vez vai para o primeiro mesmo), assim fazendo que possamos acessar as informações de cada registro por vez pelo próprio objeto do ResultSet. Muito estranho.
+
+Possui alguns métodos que podemos utilizar para pegar informações do registro com o tipo de dado certo, como "getInt(<index>)".
+
+Precisamos fechar o ResultSet.
+
 ============Statement============
 
 É uma classe parecida com a classe "PreparedStatement", mas com a diferença de que ela não possui os métodos de set, dessa forma nos fazendo ter que inserir os dados na string por meio de concatenação.
@@ -31,3 +47,20 @@ Não é recomendado utilizá-la, tendo em vista que damos brecha para um ataque 
 ============DAO (Data Access Object)============
 
 Classes DAO tem como objetivo isolar as interações com o banco de dados, de forma que a lógica de fazer qualquer ação com o banco de dados fique isolada nessa classe e as demais classes do nosso sistema tenham suas próprias responsabilidades, sem terem que se preocupar com a interação com o banco de dados em si.
+
+============CONNECTION POOL============
+
+É um conceito muito útil de reutilização de conexões ao banco, para que não tenhamos que realmente reabrir conexões com o banco para cada ação que formos fazer nele no nosso código.
+
+Consiste na ideia de ter um grupo de conexões que estarão abertas e que serão utilizadas quando abrirmos uma nova conexão ao nosso banco, ou seja, não estaremos realmente abrindo uma nova conexão, e sim aproveitando essa que já estava na pool. Quando fecharmos a conexão que abrirmos, essa conexão voltará a estar disponível na Connection Pool.
+
+Connection pool é escalável e pode ser modificada conforme a demanda.
+
+O pacote de connection pool mais utilizado no mundo Java é o HikariCP. É dele que as exceptions do HikariPool vêm.
+
+Utilizamos o HikariCP para abrir as nossas conexões no lugar do DriverManager, devolvendo um HikariDataSource e utilizando um HikariConfig para passar a nossa URL JDBC, username, password, pool size máximo, etc. Não irei entrar em detalhes de como fazer isso, pois é uma tarefa nada trivial.
+
+Utilizamos o método "getConnection()" do HikariDataSource para abrirmos a conexão a partir dele.
+
+Se não existirem conexões disponíveis na connection pool quando algum usuário fizer uma requisição ao banco, o próprio HikariCP irá garantir com que a requisição seja feita assim que uma das conexões sendo utilizadas seja liberada. Isso é muito incrível.
+

@@ -2,8 +2,8 @@ package br.com.alura.bytebank;
 
 import br.com.alura.bytebank.domain.RegraDeNegocioException;
 import br.com.alura.bytebank.domain.cliente.ClienteCadastroDTO;
-import br.com.alura.bytebank.domain.conta.ContaService;
 import br.com.alura.bytebank.domain.conta.ContaAberturaDTO;
+import br.com.alura.bytebank.domain.conta.ContaService;
 
 import java.util.Scanner;
 
