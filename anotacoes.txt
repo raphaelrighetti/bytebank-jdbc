@@ -64,3 +64,10 @@ Utilizamos o método "getConnection()" do HikariDataSource para abrirmos a conex
 
 Se não existirem conexões disponíveis na connection pool quando algum usuário fizer uma requisição ao banco, o próprio HikariCP irá garantir com que a requisição seja feita assim que uma das conexões sendo utilizadas seja liberada. Isso é muito incrível.
 
+============TRANSFERÊNCIAS============
+
+Utilizamos transferências no banco de dados para juntarmos uma série de operações e executá-las umas juntas das outras, assim conseguindo commitar a operação a cada operação e dar um rollback, se necessário.
+
+Podemos fazer isso desativando o "AutoCommit" da nossa Connection com o método "setAutoCommit(false)" e dando o commit da connection manualmente com o método "commit()" após a execução do nosso PreparedStatement, o que faz com que o commit seja dado se não ocorrer nenhum erro com a execução da query. Quando acontece um erro e precisamos dar um rollback, apenas executamos um rollback na connection com o método "rollback()" no bloco de catch.
+
+Transferências são muito úteis e previnem muitas inconcistências que podem acontecer quando estamos trabalhando com nossos dados em SGBDs. É um tópico bastante interessante para se estudar.

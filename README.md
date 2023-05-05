@@ -27,3 +27,11 @@ Também tive o meu primeiro contato com uma classe DAO, que eu já sabia no conc
 Nesta aula aprendi a utilizar o método "executeQuery()" do PreparedStatement para executar queries de busca e conseguir ter o retorno dos registros no banco de dados por meio de um ResultSet, que funciona de maneira diferente de um HashSet, mas até que é intuitivo.
 
 Também aprendi o conceito de connection pool, coisa que eu ainda não havia visto e fiquei bastante impressionado com o poder que ele tem. Finalmente entendi de onde que vem o tal do HikariPool e aprendi a criar a minha própria connection pool com o HikariCP.
+
+### Aula 4
+
+#### Depósito, saque e transferência
+
+Nesta aula criei lógicas de depósito, saque e transferência para as contas registradas no sistema. Essas lógicas foram mais do que eu já havia visto anteriormente no curso, mas foi bom para aplicar o conhecimento em outro contexto.
+
+Além disso, aprendi sobre as transações nos bancos de dados e como implementar isso com o JDBC. Nunca tinha visto realmente o que significava esse termo e achei muito interessante o jeito como podemos aplicar uma transação utilizando apenas alguns métodos da nossa Connection. Também pude perceber que seria uma boa dar uma estudada mais a fundo no SQL.

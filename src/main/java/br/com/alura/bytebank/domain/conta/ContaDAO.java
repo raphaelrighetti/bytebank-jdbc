@@ -57,13 +57,14 @@ public class ContaDAO {
 
             while (resultSet.next()) {
                 int numero = resultSet.getInt(1);
+                BigDecimal saldo = resultSet.getBigDecimal(2);
                 String nome = resultSet.getString(3);
                 String cpf = resultSet.getString(4);
                 String email = resultSet.getString(5);
 
                 ClienteCadastroDTO dadosCliente = new ClienteCadastroDTO(nome, cpf, email);
                 Cliente cliente = new Cliente(dadosCliente);
-                Conta conta = new Conta(numero, cliente);
+                Conta conta = new Conta(numero, saldo, cliente);
 
                 contas.add(conta);
             }
@@ -91,6 +92,8 @@ public class ContaDAO {
 
             resultSet.next();
 
+            int numeroDaConta = resultSet.getInt(1);
+            BigDecimal saldo = resultSet.getBigDecimal(2);
             String nome = resultSet.getString(3);
             String cpf = resultSet.getString(4);
             String email = resultSet.getString(5);
@@ -98,7 +101,7 @@ public class ContaDAO {
             ClienteCadastroDTO dadosCliente = new ClienteCadastroDTO(nome, cpf, email);
             Cliente cliente = new Cliente(dadosCliente);
 
-            conta = new Conta(numero, cliente);
+            conta = new Conta(numeroDaConta, saldo, cliente);
 
             preparedStatement.close();
             resultSet.close();
@@ -107,5 +110,32 @@ public class ContaDAO {
         }
 
         return conta;
+    }
+
+    public void atualizarSaldo(int numero, BigDecimal valor) {
+        String sql = "UPDATE conta SET saldo = ? WHERE numero = ?";
+
+        try {
+            connection.setAutoCommit(false);
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(2, numero);
+            preparedStatement.setBigDecimal(1, valor);
+
+            preparedStatement.execute();
+
+            connection.commit();
+
+            preparedStatement.close();
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            throw new RuntimeException(e);
+        }
     }
 }

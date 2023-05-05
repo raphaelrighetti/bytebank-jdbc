@@ -26,7 +26,7 @@ public class ContaService {
     }
 
     public BigDecimal consultarSaldo(Integer numeroDaConta) {
-        var conta = buscarContaPorNumero(numeroDaConta);
+        Conta conta = buscarContaPorNumero(numeroDaConta);
         return conta.getSaldo();
     }
 
@@ -40,7 +40,8 @@ public class ContaService {
     }
 
     public void realizarSaque(Integer numeroDaConta, BigDecimal valor) {
-        var conta = buscarContaPorNumero(numeroDaConta);
+        Conta conta = buscarContaPorNumero(numeroDaConta);
+
         if (valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new RegraDeNegocioException("Valor do saque deve ser superior a zero!");
         }
@@ -49,20 +50,38 @@ public class ContaService {
             throw new RegraDeNegocioException("Saldo insuficiente!");
         }
 
-        conta.sacar(valor);
+        BigDecimal novoSaldo = conta.getSaldo().subtract(valor);
+
+        try (Connection connection = connectionFactory.getConnection()) {
+            new ContaDAO(connection).atualizarSaldo(numeroDaConta, novoSaldo);
+        } catch(SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void realizarDeposito(Integer numeroDaConta, BigDecimal valor) {
-        var conta = buscarContaPorNumero(numeroDaConta);
+    public void realizarDeposito(Integer numero, BigDecimal valor) {
+        Conta conta = buscarContaPorNumero(numero);
+
         if (valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new RegraDeNegocioException("Valor do deposito deve ser superior a zero!");
         }
 
-        conta.depositar(valor);
+        BigDecimal novoSaldo = conta.getSaldo().add(valor);
+
+        try (Connection connection = connectionFactory.getConnection()) {
+            new ContaDAO(connection).atualizarSaldo(numero, novoSaldo);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void realizarTransferencia(Integer numeroDaContaOrigem, Integer numeroDaContaDestino, BigDecimal valor) {
+        realizarSaque(numeroDaContaOrigem, valor);
+        realizarDeposito(numeroDaContaDestino, valor);
     }
 
     public void encerrar(Integer numeroDaConta) {
-        var conta = buscarContaPorNumero(numeroDaConta);
+        Conta conta = buscarContaPorNumero(numeroDaConta);
         if (conta.possuiSaldo()) {
             throw new RegraDeNegocioException("Conta não pode ser encerrada pois ainda possui saldo!");
         }
